@@ -1,10 +1,18 @@
+import { TaskSchema } from './../schema/task.schema';
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { Task } from '../entities/task.entity';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 
 @Injectable()
-export class TaskService {
+export class TaskRepositoryService {
+
+  constructor(@InjectModel("TaskSchema") private taskModel: Model<Task>) { }
+
   create(createTaskDto: CreateTaskDto) {
+    this.taskModel.find()
     return 'This action adds a new task';
   }
 
