@@ -25,7 +25,9 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^10.0.0",
+    "class-validator": "^0.14.0",
     "mongoose": "^7.6.3",
+    "password-hash-and-salt": "^0.1.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
