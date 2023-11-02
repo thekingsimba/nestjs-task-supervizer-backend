@@ -1,12 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UnauthorizedException, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UnauthorizedException, HttpException, UsePipes, UseFilters } from '@nestjs/common';
 import { SignUpAuthDto } from '../dto/SignUpAuthDto';
 import { SignInAuthDto } from '../dto/SignInAuthDto';
 import { UpdateUserDetailsDto } from '../dto/UpdateUserDetailsDto';
 import { UserAuthRepoService } from '../repo/user-auth.repo.service';
 import * as passwordHash from 'password-hash-and-salt'
-import * as jwt from 'jsonwebtoken'
-import { User } from '../entities/user.entity';
-
+import * as jwt from 'jsonwebtoken';
 import { SignInAuthResponseDto } from '../dto/SignInAuthResponseDto';
 import { JWT_SECRET } from 'src/constants/constants';
 
