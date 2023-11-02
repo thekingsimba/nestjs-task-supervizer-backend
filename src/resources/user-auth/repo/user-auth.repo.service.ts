@@ -26,8 +26,8 @@ export class UserAuthRepoService {
     // return newUser.toObject({ versionKey: false });
   }
 
-  async findUser(email: string): Promise<User> {
-    const userFound = await this.userModel.findOne({ email });
+  async findUser(username: string): Promise<User> {
+    const userFound = await this.userModel.findOne({ username });
     return userFound;
   }
 

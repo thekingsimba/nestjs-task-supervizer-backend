@@ -9,42 +9,55 @@ import { User } from '../entities/user.entity';
 
 import { SignInAuthResponseDto } from '../dto/SignInAuthResponseDto';
 import { JWT_SECRET } from 'src/constants/constants';
+
+
 @Controller('auth')
 export class UserAuthController {
   constructor(private readonly userAuthService: UserAuthRepoService) { }
 
-  @Post()
-  signUp(@Body() createUserAuthDto: SignUpAuthDto) {
-    // hash the password
-    passwordHash(createUserAuthDto.password).hash(function (error, hash) {
-      if (error) {
-        throw new Error('Something went wrong!');
-      }
+  @Post("signup")
+  async signUp(@Body() createUserAuthDto: SignUpAuthDto) {
 
-      createUserAuthDto.password = hash;
+    let userData = createUserAuthDto;
+    const parentScope = this;
+
+    return new Promise((resolve, reject) => {
+      passwordHash(createUserAuthDto.password).hash(async function (error, hash) {
+
+        if (error) {
+          reject(new HttpException('Something went wrong!', 500));
+        }
+
+        const userSaved = await parentScope.userAuthService.create({ ...userData, password: hash })
+
+        resolve(userSaved);
+      })
+
     })
-
-    return this.userAuthService.create(createUserAuthDto)
 
   }
 
-  @Post()
+  @Post("signin")
   async signIn(@Body() signUpAuthDto: SignInAuthDto): Promise<SignInAuthResponseDto> {
-    const userDB = await this.userAuthService.findUser(signUpAuthDto.email)
+    const userDB = await this.userAuthService.findUser(signUpAuthDto.username)
     if (!userDB) {
       throw new NotFoundException("User not found");
     }
 
     return new Promise((resolve, reject) => {
 
+      console.log(userDB.password);
       passwordHash(signUpAuthDto.password).verifyAgainst(userDB.password, function (error, verified) {
-        if (error)
+        if (error) {
+          console.log(error)
           reject(new HttpException('Oops! Something went wrong on our end...', 500));
+        }
 
         if (!verified) {
           reject(new UnauthorizedException('User or password invalid!'));
 
-        } else { // user confirmed 
+        }
+        else { // user confirmed 
           const userDetailsForToken = userDB as SignInAuthResponseDto
           const token: string = jwt.sign({ ...userDetailsForToken }, JWT_SECRET);
           const response: SignInAuthResponseDto = {
