@@ -1,5 +1,4 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
-import { BaseExceptionFilter } from "@nestjs/core";
 
 @Catch()
 export class FallbackException implements ExceptionFilter {
