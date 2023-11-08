@@ -7,4 +7,14 @@ export const TaskSchema = new mongoose.Schema({
   status: Boolean,
   createDate: String,
   lastUpdate: String,
+  createdBy_username: String,
+  createdBy_userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  assignTo_username: String,
+  assignTo_userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
 });

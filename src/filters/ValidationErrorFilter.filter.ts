@@ -6,8 +6,6 @@ export class ValidationErrorFilter implements ExceptionFilter {
 
   catch(exception: ValidationException, host: ArgumentsHost): any {
 
-    console.log("filter called !")
-
     const ctx = host.switchToHttp(),
       response = ctx.getResponse();
 
