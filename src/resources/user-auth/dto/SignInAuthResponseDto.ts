@@ -1,10 +1,5 @@
 import { IsBoolean, IsEmail, IsMongoId, IsNotEmpty, IsString } from "class-validator";
-import { User } from "../entities/user.entity";
-
-type CustomUserFields = Exclude<keyof User, 'password'>;
-
-
-export class SignInAuthResponseDto implements Pick<User, CustomUserFields>  {
+export class SignInAuthResponseDto {
   @IsString()
   @IsMongoId()
   _id: string;
@@ -28,3 +23,7 @@ export class SignInAuthResponseDto implements Pick<User, CustomUserFields>  {
   @IsNotEmpty()
   token: string;
 }
+
+
+export type StrictSignInAuthResponseDto = SignInAuthResponseDto & { [key: string]: never };
+

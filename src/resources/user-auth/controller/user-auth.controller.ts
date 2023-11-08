@@ -5,7 +5,7 @@ import { UpdateUserDetailsDto } from '../dto/UpdateUserDetailsDto';
 import { UserAuthRepoService } from '../repo/user-auth.repo.service';
 import * as passwordHash from 'password-hash-and-salt'
 import * as jwt from 'jsonwebtoken';
-import { SignInAuthResponseDto } from '../dto/SignInAuthResponseDto';
+import { SignInAuthResponseDto, StrictSignInAuthResponseDto } from '../dto/SignInAuthResponseDto';
 import { JWT_SECRET } from 'src/constants/constants';
 
 
@@ -36,7 +36,7 @@ export class UserAuthController {
   }
 
   @Post("signin")
-  async signIn(@Body() signUpAuthDto: SignInAuthDto): Promise<SignInAuthResponseDto> {
+  async signIn(@Body() signUpAuthDto: SignInAuthDto): Promise<StrictSignInAuthResponseDto> {
 
     const userDB = await this.userAuthService.findUser(signUpAuthDto.username)
 
@@ -57,12 +57,13 @@ export class UserAuthController {
         }
 
         else { // user confirmed 
-          const userFound = { ...userDB }
+          const { password, ...userFound } = userDB;
           const token: string = jwt.sign(userFound, JWT_SECRET);
-          resolve({
+          let signedUser: StrictSignInAuthResponseDto = {
             ...userFound,
             token
-          })
+          }
+          resolve(signedUser)
         }
       });
 
