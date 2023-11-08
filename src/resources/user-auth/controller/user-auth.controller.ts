@@ -57,20 +57,20 @@ export class UserAuthController {
         }
 
         else { // user confirmed 
-          const { password, ...userFound } = userDB;
+          const { password, _id, ...userFound } = userDB;
           const token: string = jwt.sign(userFound, JWT_SECRET);
-          let signedUser: StrictSignInAuthResponseDto = {
+          let signedUser = {
+            id: userDB._id,
             ...userFound,
             token
-          }
-          resolve(signedUser)
+          };
+          resolve(signedUser as StrictSignInAuthResponseDto);
         }
       });
 
-    })
-
-
+    });
   }
+
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

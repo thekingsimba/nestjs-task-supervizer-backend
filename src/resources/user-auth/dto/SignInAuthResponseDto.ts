@@ -2,7 +2,7 @@ import { IsBoolean, IsEmail, IsMongoId, IsNotEmpty, IsString } from "class-valid
 export class SignInAuthResponseDto {
   @IsString()
   @IsMongoId()
-  _id: string;
+  id: string;
 
   @IsString()
   @IsNotEmpty()
