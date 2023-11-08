@@ -37,14 +37,15 @@ export class UserAuthController {
 
   @Post("signin")
   async signIn(@Body() signUpAuthDto: SignInAuthDto): Promise<SignInAuthResponseDto> {
+
     const userDB = await this.userAuthService.findUser(signUpAuthDto.username)
+
     if (!userDB) {
       throw new NotFoundException("User not found");
     }
 
     return new Promise((resolve, reject) => {
 
-      console.log(userDB.password);
       passwordHash(signUpAuthDto.password).verifyAgainst(userDB.password, function (error, verified) {
         if (error) {
           console.log(error)
@@ -53,17 +54,15 @@ export class UserAuthController {
 
         if (!verified) {
           reject(new UnauthorizedException('User or password invalid!'));
-
         }
-        else { // user confirmed 
-          const userDetailsForToken = userDB as SignInAuthResponseDto
-          const token: string = jwt.sign({ ...userDetailsForToken }, JWT_SECRET);
-          const response: SignInAuthResponseDto = {
-            ...userDetailsForToken,
-            token
-          }
-          resolve(response)
 
+        else { // user confirmed 
+          const userFound = { ...userDB }
+          const token: string = jwt.sign(userFound, JWT_SECRET);
+          resolve({
+            ...userFound,
+            token
+          })
         }
       });
 

@@ -18,17 +18,11 @@ export class UserAuthRepoService {
   async create(newUserData: SignUpAuthDto) {
     const newUser = await this.userModel.create(newUserData);
     return newUser.toObject({ versionKey: false })
-
-    // const newUser = new this.userModel(newUserData)
-
-    // newUser.save()
-
-    // return newUser.toObject({ versionKey: false });
   }
 
   async findUser(username: string): Promise<User> {
     const userFound = await this.userModel.findOne({ username });
-    return userFound;
+    return userFound.toObject({ versionKey: false });
   }
 
   update(id: string, userDetails: UpdateUserDetailsDto) {
