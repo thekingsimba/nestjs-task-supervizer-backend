@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
 import { TaskRepositoryService } from '../repository/task.repository.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
+import { Task } from '../entities/task.entity';
 
 @Controller('task')
 export class TaskController {
@@ -12,13 +13,23 @@ export class TaskController {
     return this.taskService.create(createTaskDto);
   }
 
-  @Get()
-  findAll() {
-    return this.taskService.findAll();
+
+  // find all task assigned to a certain user break into pages
+  @Get('/:userId')
+  async findAll(
+    @Param("userId") userId: string,
+    @Query('pageNumber', ParseIntPipe) pageNumber = 1,
+    @Query('pageSize', ParseIntPipe) pageSize = 10
+  ): Promise<{ currentPageTask: Task[], totalNumberOfPage: number }> {
+    return this.taskService.findAllTaskAssignedToUser(userId, pageSize, pageNumber);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  // find one task assigned to a certain user
+  @Get('/:assignedToUserId/:taskId')
+  findOne(
+    @Param('assignedToUserId') assignedToUserId: string,
+    @Param('taskId') id: string
+  ) {
     return this.taskService.findOne(+id);
   }
 

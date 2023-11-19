@@ -11,8 +11,27 @@ export class TaskRepositoryService {
 
   constructor(@InjectModel("TaskSchema") private taskModel: Model<Task>) { }
 
-  async findAll() {
-    return this.taskModel.find();
+  async findAllTaskAssignedToUser(userId: string, pageSize: number, pageNumber: number) {
+    const totalNumberTaskFound = await this.taskModel.find({ assignTo_userId: userId }).count();
+    let totalNumberOfPage: number;
+
+    if ((totalNumberTaskFound % pageSize) > 0) {
+      totalNumberOfPage = (totalNumberTaskFound / pageSize) + 1
+    } else {
+      totalNumberOfPage = totalNumberTaskFound / pageSize;
+    }
+
+
+    const currentPageTask: Task[] = await this.taskModel.find({ assignTo_userId: userId })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .exec()
+
+    return {
+      currentPageTask,
+      totalNumberOfPage
+    }
+
   }
 
   async update(id: number, changes: UpdateTaskDto) {
