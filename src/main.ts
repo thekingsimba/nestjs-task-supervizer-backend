@@ -10,6 +10,12 @@ import { ValidationErrorFilter } from './filters/ValidationErrorFilter.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // allow sending cookies and authentication headers
+  });
+
   app.setGlobalPrefix("api");
 
   app.useGlobalFilters(
