@@ -57,11 +57,11 @@ export class UserAuthController {
         }
 
         else { // user confirmed 
-          const { password, _id, ...userFound } = userDB;
-          const token: string = jwt.sign(userFound, JWT_SECRET);
+          const { password, _id, ...userRemainingData } = userDB;
+          const token: string = jwt.sign(userRemainingData, JWT_SECRET);
           let signedUser = {
             id: userDB._id,
-            ...userFound,
+            ...userRemainingData,
             token
           };
           resolve(signedUser as StrictSignInAuthResponseDto);

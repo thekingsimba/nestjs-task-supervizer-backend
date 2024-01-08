@@ -3,4 +3,5 @@ import { SignUpAuthDto } from './SignUpAuthDto';
 
 export class SignInAuthDto extends PartialType(SignUpAuthDto) {
   password: string;
+  username: string;
 }
