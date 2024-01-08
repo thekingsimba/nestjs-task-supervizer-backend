@@ -41,7 +41,7 @@ export class UserAuthController {
     const userDB = await this.userAuthService.findUser(signUpAuthDto.username)
 
     if (!userDB) {
-      throw new NotFoundException("User not found");
+      throw new UnauthorizedException('User or password invalid!');
     }
 
     return new Promise((resolve, reject) => {
